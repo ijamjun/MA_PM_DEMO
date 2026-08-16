@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>KU Facility Service Center</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow" data-i18n="eyebrow">ระบบแจ้งซ่อมและบำรุงรักษา</p>
+        <h1>KU Facility Service Center</h1>
+        <p class="datetime" id="currentDateTime">กำลังโหลดวันเวลา</p>
+        <div class="topbar-actions">
+          <button class="report-button" id="monthlyReportBtn" type="button" title="รายงานรายเดือน Excel">Download Excel</button>
+          <button class="report-button ghost" id="exportBtn" type="button" title="ส่งออกข้อมูล">Download JSON</button>
+          <label class="report-button ghost import-label" for="importFile" title="นำเข้าข้อมูล">Import</label>
+          <input id="importFile" class="sr-only" type="file" accept="application/json">
+        </div>
+        <div class="language-switch" aria-label="Language switcher">
+          <button class="lang-btn active" id="langTh" type="button" data-lang="th" title="ภาษาไทย">
+            <span class="flag flag-th" aria-hidden="true"></span>
+            <span>TH</span>
+          </button>
+          <button class="lang-btn" id="langEn" type="button" data-lang="en" title="English">
+            <span class="flag flag-en" aria-hidden="true"></span>
+            <span>EN</span>
+          </button>
+        </div>
+      </div>
+      <div class="header-animation" aria-hidden="true">
+        <img src="assets/animation-facility-system.svg" alt="">
+      </div>
+      <div class="brand-mark">
+        <img class="ku-logo" src="รูปตัวอย่าง/Logo_ku_th.svg.webp" alt="มหาวิทยาลัยเกษตรศาสตร์">
+      </div>
+    </header>
+
+    <main>
+      <section class="dashboard" aria-label="Performance">
+        <article class="metric metric-open">
+          <span data-i18n="statusOpen">แจ้งงาน</span>
+          <strong id="openCount">0</strong>
+        </article>
+        <article class="metric metric-ack">
+          <span data-i18n="statusAck">กำลังดำเนินงาน</span>
+          <strong id="ackCount">0</strong>
+        </article>
+        <article class="metric metric-done">
+          <span data-i18n="statusDone">งานเสร็จแล้ว</span>
+          <strong id="doneCount">0</strong>
+        </article>
+        <article class="metric metric-urgent">
+          <span data-i18n="urgentJobs">งานเร่งด่วน</span>
+          <strong id="urgentCount">0</strong>
+        </article>
+        <article class="metric metric-total">
+          <span data-i18n="totalJobs">งานทั้งหมด</span>
+          <strong id="totalCount">0</strong>
+        </article>
+        <article class="metric metric-progress">
+          <span data-i18n="overallProgress">ความคืบหน้างานทั้งหมด</span>
+          <strong id="progressPercent">0%</strong>
+        </article>
+      </section>
+
+      <section class="system-grid" aria-label="สถานะระบบและกราฟ">
+        <article class="chart-panel">
+          <div class="section-head compact">
+            <div>
+              <h2 data-i18n="comparisonChart">กราฟเปรียบเทียบ</h2>
+              <p data-i18n="chartDescription">กราฟแท่งพร้อม filter เปรียบเทียบตามสถานะ อาคาร และเดือน</p>
+            </div>
+          </div>
+          <div class="chart-filters">
+            <label>
+              <span data-i18n="compareBy">เปรียบเทียบ</span>
+              <select id="chartMode">
+                <option value="status" data-i18n="jobStatus">สถานะงาน</option>
+                <option value="building" data-i18n="building">อาคาร</option>
+                <option value="month" data-i18n="month">เดือน</option>
+              </select>
+            </label>
+            <label>
+              <span data-i18n="building">อาคาร</span>
+              <select id="chartBuildingFilter">
+                <option value="all" data-i18n="allBuildings">ทุกอาคาร</option>
+              </select>
+            </label>
+            <label>
+              <span data-i18n="month">เดือน</span>
+              <select id="chartMonthFilter">
+                <option value="all" data-i18n="allMonths">ทุกเดือน</option>
+              </select>
+            </label>
+          </div>
+          <div class="charts">
+            <div>
+              <h3 id="chartTitle">สถานะงาน</h3>
+              <div class="chart-legend" aria-label="คำอธิบายสีกราฟ">
+                <span><i class="legend-open"></i><span data-i18n="statusOpen">แจ้งงาน</span></span>
+                <span><i class="legend-ack"></i><span data-i18n="statusAck">กำลังดำเนินงาน</span></span>
+                <span><i class="legend-done"></i><span data-i18n="doneShort">เสร็จแล้ว</span></span>
+                <span><i class="legend-urgent"></i><span data-i18n="urgentShort">เร่งด่วน</span></span>
+                <span><i class="legend-cancelled"></i><span data-i18n="cancelledShort">ยกเลิก</span></span>
+              </div>
+              <div id="comparisonChart" class="bar-chart comparison-chart"></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="workspace">
+        <aside class="panel">
+          <div class="tabs" role="tablist" aria-label="ฟอร์ม">
+            <button class="tab active" id="reportTab" type="button" data-i18n="reportJob">แจ้งงาน</button>
+            <button class="tab" id="closeTab" type="button" data-i18n="closeJob">ปิดงาน</button>
+          </div>
+
+          <form id="reportForm" class="form-pane active">
+            <h2 data-i18n="maintenanceRequest">แจ้งงานซ่อมบำรุง</h2>
+            <label>
+              <span data-i18n="requestCode">รหัสนิสิต</span>
+              <input name="studentCode" type="password" inputmode="numeric" autocomplete="off" placeholder="123" required>
+            </label>
+            <div class="split">
+              <label>
+                <span data-i18n="requesterName">ชื่อผู้แจ้ง</span>
+                <input name="requester" type="text" required>
+              </label>
+              <label>
+                <span data-i18n="requesterEmail">อีเมลผู้แจ้ง</span>
+                <input name="requesterEmail" type="email" autocomplete="email" placeholder="name@example.com" required>
+              </label>
+            </div>
+            <div class="split">
+              <label>
+                <span data-i18n="priority">ความเร่งด่วน</span>
+                <select name="priority" required>
+                  <option value="normal" data-i18n="priorityNormal">ปกติ</option>
+                  <option value="urgent" data-i18n="priorityUrgent">เร่งด่วน</option>
+                  <option value="critical" data-i18n="priorityCritical">วิกฤต</option>
+                </select>
+              </label>
+            </div>
+            <div class="split">
+              <label>
+                <span data-i18n="building">อาคาร</span>
+                <input name="building" type="text" required>
+              </label>
+              <label>
+                <span data-i18n="floor">ชั้น</span>
+                <input name="floor" type="text" required>
+              </label>
+            </div>
+            <label>
+              <span data-i18n="symptom">อาการที่เสียหาย</span>
+              <textarea name="symptom" rows="4" required></textarea>
+            </label>
+            <label>
+              <span data-i18n="beforePhoto">รูปของปัญหา</span>
+              <input name="beforePhoto" type="file" accept="image/*" required>
+            </label>
+            <button class="primary" type="submit" data-i18n="saveRequest">บันทึกงานแจ้งซ่อม</button>
+            <p class="message" id="reportMessage" role="status"></p>
+          </form>
+
+          <form id="closeForm" class="form-pane">
+            <h2 data-i18n="updateDone">อัปเดตงานเสร็จแล้ว</h2>
+            <label>
+              <span data-i18n="staffCode">รหัสเจ้าหน้าที่</span>
+              <input name="staffCode" type="password" inputmode="numeric" autocomplete="off" placeholder="123" required>
+            </label>
+            <label>
+              <span data-i18n="ticketId">รหัสที่แจ้ง</span>
+              <input name="ticketId" type="text" placeholder="เช่น MAPM-260816-001" required>
+            </label>
+            <label>
+              <span data-i18n="resolution">รายละเอียดหลังดำเนินการ</span>
+              <textarea name="resolution" rows="4" required></textarea>
+            </label>
+            <label>
+              <span data-i18n="afterPhoto">รูปหลังทำ</span>
+              <input name="afterPhoto" type="file" accept="image/*" required>
+            </label>
+            <button class="primary" type="submit" data-i18n="closeJob">ปิดงาน</button>
+            <p class="message" id="closeMessage" role="status"></p>
+          </form>
+        </aside>
+
+        <section class="jobs">
+          <div class="section-head">
+            <div>
+              <h2 data-i18n="jobList">รายการงาน</h2>
+              <p id="jobSummary">ยังไม่มีงานในระบบ</p>
+            </div>
+            <div class="filters">
+              <input id="searchInput" type="search" placeholder="ค้นหารหัส / อาคาร / ผู้แจ้ง" data-i18n-placeholder="searchPlaceholder">
+              <select id="statusFilter" aria-label="กรองสถานะ">
+                <option value="all" data-i18n="allStatuses">ทุกสถานะ</option>
+                <option value="open" data-i18n="statusOpen">แจ้งงาน</option>
+                <option value="acknowledged" data-i18n="statusAck">กำลังดำเนินงาน</option>
+                <option value="done" data-i18n="doneShort">เสร็จแล้ว</option>
+                <option value="cancelled" data-i18n="statusCancelled">ยกเลิกงาน</option>
+              </select>
+            </div>
+          </div>
+          <div id="jobList" class="job-list"></div>
+        </section>
+      </section>
+
+      <section class="activity-panel">
+        <div class="section-head compact">
+          <div>
+            <h2>Activity Log</h2>
+            <p data-i18n="activityDescription">บันทึกการแจ้งงาน เริ่มดำเนินงาน ปิดงาน ยกเลิกงาน และนำเข้าข้อมูล</p>
+          </div>
+        </div>
+        <div id="activityLog" class="activity-list"></div>
+      </section>
+
+      <section class="storage-bottom">
+        <article class="storage-panel">
+          <div class="section-head compact">
+            <div>
+              <h2>Database Storage for Demo</h2>
+              <p id="storageStatusText">กำลังตรวจสอบพื้นที่จัดเก็บ</p>
+            </div>
+            <strong id="storagePercent">0%</strong>
+          </div>
+          <div class="progress-track storage-track" aria-hidden="true">
+            <div id="storageFill" class="progress-fill storage-fill"></div>
+          </div>
+          <p class="storage-note" id="cleanupStatus">ระบบจะล้างข้อมูลเก่าที่เสร็จแล้วหรือยกเลิกแล้วก่อน เมื่อข้อมูลเกิน 100 MB</p>
+        </article>
+      </section>
+    </main>
+
+    <dialog id="detailDialog">
+      <button class="dialog-close" id="closeDialogBtn" type="button" aria-label="ปิด">×</button>
+      <div id="dialogContent"></div>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>

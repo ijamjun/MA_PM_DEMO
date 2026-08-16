@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 150" role="img" aria-label="Lighting animation">
+  <defs>
+    <radialGradient id="lightGlow" cx=".5" cy=".45" r=".55">
+      <stop offset="0" stop-color="#fef9c3"/>
+      <stop offset=".45" stop-color="#bbf7d0"/>
+      <stop offset="1" stop-color="#ecfdf5"/>
+    </radialGradient>
+    <linearGradient id="lamp" x1="0" x2="1">
+      <stop offset="0" stop-color="#047857"/>
+      <stop offset="1" stop-color="#22c55e"/>
+    </linearGradient>
+  </defs>
+  <style>
+    .glow{animation:glow 1.8s ease-in-out infinite;transform-origin:center}
+    .ray{stroke:#facc15;stroke-width:6;stroke-linecap:round;animation:ray 1.8s ease-in-out infinite}
+    .ray.two{animation-delay:.2s}.ray.three{animation-delay:.4s}
+    .beam{fill:#fef3c7;opacity:.55;animation:beam 1.8s ease-in-out infinite}
+    @keyframes glow{0%,100%{opacity:.65;transform:scale(.96)}50%{opacity:1;transform:scale(1.06)}}
+    @keyframes ray{0%,100%{opacity:.25;stroke-dasharray:4 16}50%{opacity:1;stroke-dasharray:22 4}}
+    @keyframes beam{0%,100%{opacity:.28}50%{opacity:.68}}
+  </style>
+  <rect x="8" y="8" width="304" height="134" rx="22" fill="#f0fdf4"/>
+  <ellipse class="glow" cx="160" cy="84" rx="82" ry="46" fill="url(#lightGlow)"/>
+  <path class="beam" d="M112 78h96l38 48H74z"/>
+  <rect x="126" y="36" width="68" height="28" rx="14" fill="url(#lamp)"/>
+  <rect x="144" y="62" width="32" height="18" rx="9" fill="#bbf7d0"/>
+  <line class="ray" x1="74" y1="84" x2="42" y2="84"/>
+  <line class="ray two" x1="246" y1="84" x2="278" y2="84"/>
+  <line class="ray three" x1="160" y1="112" x2="160" y2="132"/>
+  <path d="M136 38c0-18 48-18 48 0" fill="none" stroke="#0f766e" stroke-width="8" stroke-linecap="round"/>
+</svg>

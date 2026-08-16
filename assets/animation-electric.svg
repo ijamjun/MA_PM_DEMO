@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 150" role="img" aria-label="Electric system animation">
+  <defs>
+    <linearGradient id="panel" x1="0" x2="1">
+      <stop offset="0" stop-color="#065f46"/>
+      <stop offset="1" stop-color="#16a34a"/>
+    </linearGradient>
+    <filter id="sparkGlow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <style>
+    .wire{fill:none;stroke:#0f766e;stroke-width:8;stroke-linecap:round;stroke-dasharray:18 12;animation:current 1.1s linear infinite}
+    .spark{fill:#facc15;filter:url(#sparkGlow);animation:spark 1.2s ease-in-out infinite;transform-origin:center}
+    .spark.two{animation-delay:.35s}
+    .bolt{fill:#facc15;animation:flash 1.4s ease-in-out infinite}
+    .led{fill:#86efac;animation:led 1.5s ease-in-out infinite}
+    @keyframes current{to{stroke-dashoffset:-30}}
+    @keyframes spark{0%,100%{opacity:.25;transform:scale(.7)}50%{opacity:1;transform:scale(1.15)}}
+    @keyframes flash{0%,100%{opacity:.55}45%,55%{opacity:1}}
+    @keyframes led{0%,100%{opacity:.45}50%{opacity:1}}
+  </style>
+  <rect x="8" y="8" width="304" height="134" rx="22" fill="#f0fdf4"/>
+  <rect x="60" y="34" width="96" height="82" rx="14" fill="url(#panel)"/>
+  <rect x="78" y="52" width="60" height="10" rx="5" fill="#dcfce7"/>
+  <circle class="led" cx="86" cy="86" r="7"/>
+  <circle class="led" cx="110" cy="86" r="7" style="animation-delay:.25s"/>
+  <circle class="led" cx="134" cy="86" r="7" style="animation-delay:.5s"/>
+  <path class="wire" d="M156 76h46c22 0 22-34 46-34h24"/>
+  <path class="wire" d="M156 92h38c20 0 22 28 48 28h38"/>
+  <path class="bolt" d="M230 44l-22 38h20l-14 34 42-52h-24l18-20z"/>
+  <circle class="spark" cx="252" cy="42" r="7"/>
+  <circle class="spark two" cx="280" cy="120" r="6"/>
+</svg>

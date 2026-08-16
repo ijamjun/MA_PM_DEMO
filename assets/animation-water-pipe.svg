@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 150" role="img" aria-label="Water pipe animation">
+  <defs>
+    <linearGradient id="pipe" x1="0" x2="1">
+      <stop offset="0" stop-color="#0f766e"/>
+      <stop offset="1" stop-color="#22c55e"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" x2="1">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#0ea5e9"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <style>
+    .pipe-line{fill:none;stroke:url(#pipe);stroke-width:24;stroke-linecap:round;stroke-linejoin:round}
+    .water-line{fill:none;stroke:url(#water);stroke-width:8;stroke-linecap:round;stroke-dasharray:34 22;animation:flow 1.6s linear infinite;filter:url(#glow)}
+    .drop{fill:#38bdf8;animation:drop 1.8s ease-in-out infinite}
+    .drop.two{animation-delay:.5s}
+    .pulse{fill:#dcfce7;animation:pulse 1.8s ease-in-out infinite}
+    @keyframes flow{to{stroke-dashoffset:-56}}
+    @keyframes drop{0%,100%{transform:translateY(0);opacity:.35}50%{transform:translateY(12px);opacity:1}}
+    @keyframes pulse{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:.9;transform:scale(1.08)}}
+  </style>
+  <rect x="8" y="8" width="304" height="134" rx="22" fill="#f0fdf4"/>
+  <circle class="pulse" cx="78" cy="75" r="34"/>
+  <path class="pipe-line" d="M42 82h78c22 0 22-38 44-38h52c24 0 24 38 48 38h20"/>
+  <path class="water-line" d="M42 82h78c22 0 22-38 44-38h52c24 0 24 38 48 38h20"/>
+  <circle cx="42" cy="82" r="17" fill="#ecfdf5" stroke="#0f766e" stroke-width="7"/>
+  <circle cx="284" cy="82" r="17" fill="#ecfdf5" stroke="#0f766e" stroke-width="7"/>
+  <path class="drop" d="M232 86c8 11 13 19 13 28a13 13 0 0 1-26 0c0-9 5-17 13-28z"/>
+  <path class="drop two" d="M184 82c6 8 10 14 10 21a10 10 0 0 1-20 0c0-7 4-13 10-21z"/>
+</svg>

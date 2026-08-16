@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 190" role="img" aria-label="Facility system animation">
+  <defs>
+    <linearGradient id="gGreen" x1="0" x2="1">
+      <stop offset="0" stop-color="#0f766e"/>
+      <stop offset="1" stop-color="#22c55e"/>
+    </linearGradient>
+    <linearGradient id="gWater" x1="0" x2="1">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#0ea5e9"/>
+    </linearGradient>
+    <radialGradient id="gLight" cx=".5" cy=".45" r=".7">
+      <stop offset="0" stop-color="#fef9c3"/>
+      <stop offset=".55" stop-color="#bbf7d0"/>
+      <stop offset="1" stop-color="#ecfdf5"/>
+    </radialGradient>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <style>
+    .water{fill:none;stroke:url(#gWater);stroke-width:8;stroke-linecap:round;stroke-dasharray:32 20;animation:flow 1.6s linear infinite;filter:url(#softGlow)}
+    .pipe{fill:none;stroke:url(#gGreen);stroke-width:20;stroke-linecap:round;stroke-linejoin:round;opacity:.92}
+    .wire{fill:none;stroke:#0f766e;stroke-width:6;stroke-linecap:round;stroke-dasharray:18 12;animation:current 1.2s linear infinite}
+    .spark{fill:#facc15;filter:url(#softGlow);animation:spark 1.35s ease-in-out infinite;transform-origin:center}
+    .beam{fill:#fef3c7;opacity:.48;animation:beam 1.9s ease-in-out infinite}
+    .lamp{fill:url(#gGreen)}
+    .drop{fill:#38bdf8;animation:drop 1.8s ease-in-out infinite}
+    @keyframes flow{to{stroke-dashoffset:-52}}
+    @keyframes current{to{stroke-dashoffset:-30}}
+    @keyframes spark{0%,100%{opacity:.32;transform:scale(.75)}50%{opacity:1;transform:scale(1.12)}}
+    @keyframes beam{0%,100%{opacity:.28}50%{opacity:.7}}
+    @keyframes drop{0%,100%{transform:translateY(0);opacity:.38}50%{transform:translateY(10px);opacity:1}}
+  </style>
+  <rect x="8" y="8" width="504" height="174" rx="26" fill="#f4fff8"/>
+  <ellipse cx="372" cy="98" rx="94" ry="54" fill="url(#gLight)" opacity=".88"/>
+  <path class="beam" d="M324 96h98l44 62H280z"/>
+  <path class="pipe" d="M44 116h96c24 0 24-42 50-42h78c24 0 24 42 50 42h72"/>
+  <path class="water" d="M44 116h96c24 0 24-42 50-42h78c24 0 24 42 50 42h72"/>
+  <circle cx="44" cy="116" r="16" fill="#ecfdf5" stroke="#0f766e" stroke-width="6"/>
+  <circle cx="390" cy="116" r="16" fill="#ecfdf5" stroke="#0f766e" stroke-width="6"/>
+  <rect x="86" y="42" width="74" height="54" rx="14" fill="#0f8a5f"/>
+  <circle cx="106" cy="72" r="6" fill="#bbf7d0"/>
+  <circle cx="126" cy="72" r="6" fill="#bbf7d0" opacity=".72"/>
+  <path class="wire" d="M160 68h54c28 0 28 38 58 38h46"/>
+  <path class="spark" d="M286 48l-18 34h16l-12 28 38-44h-20l15-18z"/>
+  <circle class="spark" cx="322" cy="86" r="6" style="animation-delay:.35s"/>
+  <rect class="lamp" x="350" y="44" width="70" height="25" rx="13"/>
+  <rect x="370" y="68" width="30" height="18" rx="9" fill="#bbf7d0"/>
+  <path class="drop" d="M222 108c7 10 12 17 12 25a12 12 0 0 1-24 0c0-8 5-15 12-25z"/>
+  <path class="drop" d="M254 112c6 8 10 14 10 21a10 10 0 0 1-20 0c0-7 4-13 10-21z" style="animation-delay:.45s"/>
+</svg>
