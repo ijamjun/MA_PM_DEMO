@@ -479,6 +479,7 @@ function openDetail(id) {
       ${ticket.closedAt ? `<p><strong>${t("closedAt")}:</strong> ${formatDateTime(ticket.closedAt)}</p>` : ""}
       ${ticket.cancelledAt ? `<p><strong>${t("cancelledAt")}:</strong> ${formatDateTime(ticket.cancelledAt)}</p>` : ""}
       ${ticket.resolution ? `<p><strong>${t("resolution")}:</strong> ${escapeHtml(ticket.resolution)}</p>` : ""}
+      ${ticket.requesterEmail ? `<a class="gmail-btn" href="${escapeHtml(gmailNotificationUrl(ticket))}" target="_blank" rel="noopener noreferrer">${gmailButtonLabel()}</a>` : ""}
       ${ticket.status === "open" ? `<button class="ack-btn" type="button" data-ack-id="${ticket.id}">${t("startWork")}</button>` : ""}
       ${ticket.status !== "cancelled" ? `<button class="danger-btn" type="button" data-cancel-id="${ticket.id}">${t("cancelJob")}</button>` : ""}
     </div>
@@ -556,6 +557,50 @@ function statusLabel(status) {
     done: t("doneShort"),
     cancelled: t("statusCancelled"),
   }[status] || t("statusOpen");
+}
+
+function gmailButtonLabel() {
+  return state.lang === "th" ? "ส่งอีเมลผ่าน Gmail" : "Send via Gmail";
+}
+
+function gmailNotificationUrl(ticket) {
+  const subject = state.lang === "th"
+    ? `แจ้งสถานะงานซ่อม ${ticket.id}`
+    : `Maintenance request update ${ticket.id}`;
+  const body = state.lang === "th" ? [
+    `เรียน คุณ${ticket.requester}`,
+    "",
+    `แจ้งสถานะงานซ่อมหมายเลข ${ticket.id}`,
+    `สถานะปัจจุบัน: ${statusLabel(ticket.status)}`,
+    `สถานที่: ${ticket.building} ชั้น ${ticket.floor}`,
+    `อาการที่แจ้ง: ${ticket.symptom}`,
+    ticket.resolution ? `ผลการดำเนินงาน: ${ticket.resolution}` : "",
+    ticket.closedAt ? `ปิดงานเมื่อ: ${formatDateTime(ticket.closedAt)}` : "",
+    "",
+    "ขอบคุณครับ/ค่ะ",
+    "KU Facility Service Center",
+  ] : [
+    `Dear ${ticket.requester},`,
+    "",
+    `This is an update for maintenance request ${ticket.id}.`,
+    `Current status: ${statusLabel(ticket.status)}`,
+    `Location: ${ticket.building}, Floor ${ticket.floor}`,
+    `Issue: ${ticket.symptom}`,
+    ticket.resolution ? `Resolution: ${ticket.resolution}` : "",
+    ticket.closedAt ? `Closed at: ${formatDateTime(ticket.closedAt)}` : "",
+    "",
+    "Thank you,",
+    "KU Facility Service Center",
+  ];
+
+  const params = new URLSearchParams({
+    view: "cm",
+    fs: "1",
+    to: ticket.requesterEmail,
+    su: subject,
+    body: body.filter(Boolean).join("\n"),
+  });
+  return `https://mail.google.com/mail/?${params.toString()}`;
 }
 
 function timelineBadges(ticket) {
